@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css" integrity="sha512-F7WyTLiiiPqvu2pGumDR15med0MDkUIo5VTVyyfECR5DZmCnDhti9q5VID02ItWjq6fvDfMaBaDl2J3WdL1uxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Konversi Suhu</title>
+  </head>
+
+  <body>
+    <div class="date" id="date-part"></div>
+    <div class="time" id="time-part"></div>
+    <div class="container">
+      <form class="text-center border border-light p-5">
+        <p class="head1"><b>Welcome to </b></p>
+        <p class="head1"><b>Temperature Convertion</b></p>
+        <div class="form-option" style="margin-bottom: 5px;">
+          <select name="from" id="from" onchange="select()">
+            <option value="celcius">Celcius</option>
+            <option value="farenheit">Farenheit</option>
+            <option value="reamur">Reamur</option>
+          </select>
+          to
+          <select name="to" id="to" onchange="select()">
+            <option value="celcius">Celcius</option>
+            <option value="farenheit">Farenheit</option>
+            <option value="reamur">Reamur</option>
+          </select>
+        </div>
+        <input
+          type="number"
+          name="inputangka"
+          id="input1"
+          class="form-control"
+          placeholder="Silahkan input angka"
+          onkeypress="validate(event)"
+          onkeyup="conv()"
+        >
+        <p class="form-result">=</p>
+        <input
+          type="number"
+          id="result"
+          class="form-control"
+          placeholder="Hasil"
+          disabled
+        >
+      </form>
+
+    <section class="Background" style="padding: 50px"> 
+      Change Background Color : <input class="form-control" id="color" />
+      <div style="text-align: center; margin-top: 5px;">
+        <button
+          type="button"
+          class="btn btn-light"
+          onclick="change()"
+        >
+          Change
+        </button>
+      </div>
+      
+    </section>   
+    </div>
+</body>
+  <script src="./Suhu.js"></script>
+  <script>
+    $(document).ready(function () {
+      var interval = setInterval(function () {
+        var momentNow = moment();
+        $("#date-part").html(
+          momentNow.format("YYYY MMMM DD") +
+            " " +
+            momentNow.format("dddd").substring(0, 3).toUpperCase()
+        );
+        $("#time-part").html(momentNow.format("A hh:mm:ss"));
+      }, 100);
+    });
+    function validate(evt) {
+      var theEvent = evt || window.event;
+
+      // Handle paste
+      if (theEvent.type === "paste") {
+        key = event.clipboardData.getData("text/plain");
+      } else {
+        // Handle key press
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+      }
+      var regex = /[0-9]|\./;
+      if (!regex.test(key)) {
+        theEvent.returnValue = false;
+        if (theEvent.preventDefault) theEvent.preventDefault();
+      }
+    }
+    function select() {
+      document.getElementById("input1").value = "";
+      document.getElementById("result").value = "";
+    }
+
+    const suhu = new Suhu();
+    function conv() {
+      if (document.getElementById("from").value == "celcius") {
+        const res = suhu.fromCelcius(
+          document.getElementById("to").value,
+          parseInt(document.getElementById("input1").value)
+        );
+        document.getElementById("result").value = res;
+      }
+      if (document.getElementById("from").value == "reamur") {
+        const res = suhu.fromReamur(
+          document.getElementById("to").value,
+          parseInt(document.getElementById("input1").value)
+        );
+        document.getElementById("result").value = res;
+      }
+      if (document.getElementById("from").value == "farenheit") {
+        const res = suhu.fromFarenheit(
+          document.getElementById("to").value,
+          parseInt(document.getElementById("input1").value)
+        );
+        document.getElementById("result").value = res;
+      }
+    }
+
+    function change() {
+      document.body.style.backgroundColor =
+        document.getElementById("color").value;
+    }
+  </script>
+
+<!-- jQuery -->
+<script 
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" 
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+<script
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"
+></script>
+<script 
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js" integrity="sha512-XLo6bQe08irJObCc86rFEKQdcFYbGGIHVXcfMsxpbvF8ompmd1SNJjqVY5hmjQ01Ts0UmmSQGfqpt3fGjm6pGA==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+</html>
+<script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"
+></script>
